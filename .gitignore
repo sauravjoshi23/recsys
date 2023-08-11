@@ -1,0 +1,5 @@
+*.zip
+*.serverless
+
+aws/
+data/

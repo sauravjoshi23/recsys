@@ -71,13 +71,13 @@ class AWSS3(object):
 
 def main():
 
-    df = pd.read_csv('./data/ratings.csv')
+    df = pd.read_csv('../data/ratings.csv', index_col=0)
     csv_buffer = StringIO()
     df.to_csv(csv_buffer)
     s3_obj = AWSS3(
         bucket="recsys-aws"
     )
-    key = "recsys-aws/raw_data/ratings.csv"
+    key = "raw_data/ratings.csv"
     s3_obj.ingest_files(
         Key=key, Response=csv_buffer.getvalue()
     )

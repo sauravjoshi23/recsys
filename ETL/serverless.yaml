@@ -54,6 +54,8 @@ resources:
         Role: ${env:GLUE_ROLE_ARN}
         SchemaChangePolicy:
           DeleteBehavior: DEPRECATE_IN_DATABASE
+        Classifiers:
+          - ${env:CUSTOM_CLASSIFIER}
         Targets:
           S3Targets:
             - Path: ${env:CRAWLER_TARGET_PATH}
