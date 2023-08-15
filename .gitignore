@@ -1,5 +1,6 @@
 *.zip
 *.serverless
+.ipynb_checkpoints
 
 aws/
 data/
