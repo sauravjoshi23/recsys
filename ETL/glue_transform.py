@@ -4,7 +4,7 @@ from awsglue.context import GlueContext
 from awsglue.job import Job
 from awsglue.dynamicframe import DynamicFrame
 from pyspark.context import SparkContext
-from pyspark.sql.functions import concat_ws, when, lit, explode
+from pyspark.sql.functions import concat_ws, when, lit, split, explode
 
 sc = SparkContext.getOrCreate()
 glueContext = GlueContext(sc)
@@ -13,7 +13,7 @@ job = Job(glueContext)
 
 ads_content_df = glueContext.create_dynamic_frame.from_catalog(
     database="recdb",
-    table_name="ads_content",
+    table_name="ads_content_csv",
     transformation_ctx="ads_content_df"
 ).toDF()
 
@@ -24,13 +24,13 @@ ads_content_df = ads_content_df.withColumn(
 
 user_profiles_df = glueContext.create_dynamic_frame.from_catalog(
     database="recdb",
-    table_name="user_profiles",
+    table_name="user_profiles_csv",
     transformation_ctx="user_profiles_df"
 ).toDF()
 
 user_ad_interaction_df = glueContext.create_dynamic_frame.from_catalog(
     database="recdb",
-    table_name="user_ad_interaction",
+    table_name="user_ad_interactions_csv",
     transformation_ctx="user_ad_interaction_df"
 ).toDF()
 
@@ -43,17 +43,17 @@ user_ad_matrix = user_ad_interaction_df.groupBy("userId").pivot("adId").sum("act
 
 item_item_interaction_df = glueContext.create_dynamic_frame.from_catalog(
     database="recdb",
-    table_name="item_item_interaction",
+    table_name="item_item_interaction_csv",
     transformation_ctx="item_item_interaction_df"
 ).toDF()
 
 transactions_df = glueContext.create_dynamic_frame.from_catalog(
     database="recdb",
-    table_name="transactions",
+    table_name="transactions_csv",
     transformation_ctx="transactions_df"
 ).toDF()
-
-transactions_df = transactions_df.select("transactionId", "userId", explode(transactions_df.adIds).alias("adId"))
+transactions_df = transactions_df.withColumn("adIds", split(transactions_df["adIds"], ","))
+transactions_df = transactions_df.select("transactionId", "userId", explode(transactions_df["adIds"]).alias("adId"))
 transactions_df = transactions_df.withColumn("present", lit(1))
 transaction_matrix = transactions_df.groupBy("transactionId").pivot("adId").sum("present").fillna(0)
 
