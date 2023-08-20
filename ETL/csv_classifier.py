@@ -6,10 +6,7 @@ def create_csv_classifier():
         'Name': 'csv_classifier',
         'Delimiter': ',',
         'QuoteSymbol': '"',
-        'ContainsHeader': 'PRESENT',
-        'Header': [
-            'UserId', 'ProductId' ,'Rating', 'Timestamp'
-        ]
+        'ContainsHeader': 'PRESENT'
     })
 
 create_csv_classifier()

@@ -1,7 +1,9 @@
+import os
 import re
 import boto3
 import pandas as pd
 from io import StringIO
+from tqdm.auto import tqdm
 
 class AWSS3(object):
 
@@ -71,16 +73,19 @@ class AWSS3(object):
 
 def main():
 
-    df = pd.read_csv('../data/ratings.csv', index_col=0)
-    csv_buffer = StringIO()
-    df.to_csv(csv_buffer)
-    s3_obj = AWSS3(
-        bucket="recsys-aws"
-    )
-    key = "raw_data/ratings.csv"
-    s3_obj.ingest_files(
-        Key=key, Response=csv_buffer.getvalue()
-    )
+    raw_data_path = "./data/"
+    files = os.listdir(raw_data_path)
+    for f in tqdm(files):
+        df = pd.read_csv(raw_data_path+f, index_col=0)
+        csv_buffer = StringIO()
+        df.to_csv(csv_buffer)
+        s3_obj = AWSS3(
+            bucket="recsys-aws"
+        )
+        key = "raw_data/"+f
+        s3_obj.ingest_files(
+            Key=key, Response=csv_buffer.getvalue()
+        )
 
 if __name__ == "__main__":
     main()
