@@ -1,7 +1,6 @@
 # Ads Personalization Recommendation System
 
 ## Table of Contents
-- [Introduction](#introduction)
 - [Data](#data)
 - [Recommendation Strategies](#recommendation-strategies)
 - [Tech Stack](#tech-stack)
@@ -10,8 +9,6 @@
 
 ---
 
-<a name="introduction"></a>
-## Introduction
 The project aims at curating and serving highly personalized ads to users. By using advanced machine learning and data processing techniques, this system predicts the most relevant ads for individual users, optimizing both user satisfaction and conversion rates.
 
 ---
